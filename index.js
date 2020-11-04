@@ -32,7 +32,7 @@ client.on("message", function (message) {
                             timestamp: new Date(),
                         };  
 
-                        if( response.data.players.online !== '0' ) {                            
+                        if( response.data.players.online !== 0 ) {                            
                             response.data.players.list.forEach(player => {
                                 fancyEmbed.fields.push({ name: player, value: "------", inline: true,})
                             });
