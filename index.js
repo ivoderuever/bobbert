@@ -18,6 +18,31 @@ client.on("message", function (message) {
         message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
     }
 
+    if (command === "help") {
+        const fancyEmbed = {
+            color: 0x53E74F,
+            title: 'Commands',
+            description: `You can use the following commands.`,
+            fields: [
+                {
+                    name: "/server status",
+                    value: "Command for checking the server status.",
+                },
+                {
+                    name: "/help",
+                    value: "Command if you need a little help or reminder.",
+                },
+                {
+                    name: "/ping",
+                    value: "Command for testing the bot or your connection.",
+                }
+            ],
+            timestamp: new Date(),
+        };
+
+        message.reply({ embed: fancyEmbed });
+    }
+
     if (command === "server") {
         if (args[0] === "status") {
             axios.get(`https://api.mcsrvstat.us/2/${config.SERVER_IP}`, {})
@@ -28,26 +53,26 @@ client.on("message", function (message) {
                             title: 'Server Status',
                             description: `The server is **Online** 
                             **${response.data.players.online}**/${response.data.players.max}`,
-                            fields:[],
+                            fields: [],
                             timestamp: new Date(),
-                        };  
+                        };
 
-                        if( response.data.players.online !== 0 ) {                            
+                        if (response.data.players.online !== 0) {
                             response.data.players.list.forEach(player => {
-                                fancyEmbed.fields.push({ name: player, value: "------", inline: true,})
+                                fancyEmbed.fields.push({ name: player, value: "------", inline: true, })
                             });
                         }
-                        
-                        message.reply({embed: fancyEmbed});
+
+                        message.reply({ embed: fancyEmbed });
                     } else {
                         const fancyEmbed = {
                             color: 0xE74F4F,
                             title: 'Server Status',
                             description: `The server is **Offline**`,
                             timestamp: new Date(),
-                        };  
+                        };
 
-                        message.reply({embed: fancyEmbed});
+                        message.reply({ embed: fancyEmbed });
                     }
 
                 })
