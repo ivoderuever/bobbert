@@ -20,7 +20,7 @@ client.on("message", function (message) {
 
     if (command === "help") {
         const fancyEmbed = {
-            color: 0x53E74F,
+            color: 0x5e90f2,
             title: 'Commands',
             description: `You can use the following commands.`,
             fields: [
@@ -51,8 +51,7 @@ client.on("message", function (message) {
                         const fancyEmbed = {
                             color: 0x53E74F,
                             title: 'Server Status',
-                            description: `The server is **Online** 
-                            **${response.data.players.online}**/${response.data.players.max}`,
+                            description: `The server is **Online** (${response.data.players.online}/${response.data.players.max})`,
                             fields: [],
                             timestamp: new Date(),
                         };
