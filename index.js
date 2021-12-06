@@ -1,50 +1,68 @@
-const Discord = require("discord.js");
+const { Client, Intents, Constants, MessageEmbed } = require('discord.js');
 const config = require("./config.json");
 const axios = require('axios');
 
-const client = new Discord.Client();
-const prefix = "/";
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
-client.on("message", function (message) {
-    if (message.author.bot) return;
-    if (!message.content.startsWith(prefix)) return;
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
 
-    const commandBody = message.content.slice(prefix.length);
-    const args = commandBody.split(' ');
-    const command = args.shift().toLowerCase();
+    const guildeId = config.GUILD_ID;
+    const guild = client.guilds.cache.get(guildeId);
+    let commands
 
-    if (command === "ping") {
-        const timeTaken = Date.now() - message.createdTimestamp;
-        message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+    if (guild) {
+        commands = guild.commands
+    } else {
+        commands = client.application?.commands
     }
 
-    if (command === "help") {
-        const fancyEmbed = {
-            color: 0x5e90f2,
-            title: 'Commands',
-            description: `You can use the following commands.`,
-            fields: [
-                {
-                    name: "/server status",
-                    value: "Command for checking the server status.",
-                },
-                {
-                    name: "/help",
-                    value: "Command if you need a little help or reminder.",
-                },
-                {
-                    name: "/ping",
-                    value: "Command for testing the bot or your connection.",
-                }
-            ],
-            timestamp: new Date(),
-        };
+    commands?.create({
+        name: 'ping',
+        description: 'Replies with Pong!',
+    })
 
-        message.reply({ embed: fancyEmbed });
+    commands?.create({
+        name: 'status',
+        description: 'Replies with the server status',
+    })
+
+    commands?.create({
+        name: 'add',
+        description: 'adds two numbers',
+        options: [
+            {
+                name: 'num1',
+                description: 'first number',
+                type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                required: true
+            },
+            {
+                name: 'num2',
+                description: 'Second number',
+                type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                required: true
+            }
+        ]
+    })
+});
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) {
+        return;
     }
 
-    if (command === "server") {
-        if (args[0] === "status") {
+    const { commandName, options, createdAt } = interaction;
+
+    switch (commandName) {
+        case 'ping':
+            const timeTaken = Date.now() - createdAt;
+            interaction.reply({
+                content: `Pong! This message had a latency of ${timeTaken}ms.`,
+                ephemeral: true
+            });
+            break;
+        case 'status':
             axios.get(`https://api.mcsrvstat.us/2/${config.SERVER_IP}`, {})
                 .then(function (response) {
                     if (response.data.online === true) {
@@ -62,7 +80,9 @@ client.on("message", function (message) {
                             });
                         }
 
-                        message.reply({ embed: fancyEmbed });
+                        interaction.reply({
+                            embeds: [fancyEmbed],
+                        });
                     } else {
                         const fancyEmbed = {
                             color: 0xE74F4F,
@@ -71,20 +91,33 @@ client.on("message", function (message) {
                             timestamp: new Date(),
                         };
 
-                        message.reply({ embed: fancyEmbed });
+                        interaction.reply({
+                            embeds: [fancyEmbed],
+                        });
                     }
 
                 })
                 .catch(function (error) {
                     console.log(error);
-                    message.reply(`Sorry something went wrong catching the data!`);
+                    interaction.reply({
+                        content: 'Sorry something went wrong catching the data!',
+                        ephemeral: true
+                    });
                 })
                 .then(function () {
-                    // always executed
+                    console.log('Request completed!');
                 });
-        }
+            break;
+        case 'add':
+            const num1 = options.getNumber('num1');
+            const num2 = options.getNumber('num2');
+            const result = num1 + num2;
+            interaction.reply({
+                content: `${num1} + ${num2} = ${result}`,
+                ephemeral: true
+            });
+            break;
     }
 });
-
 
 client.login(config.BOT_TOKEN);
