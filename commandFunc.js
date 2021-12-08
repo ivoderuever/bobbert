@@ -142,4 +142,30 @@ module.exports = {
             });
         }
     },
+    list: (interaction) => {
+        let currentDoc = documentGet();
+
+        const fancyEmbed = {
+            color: 0x3b31cc,
+            title: 'List of coordinates',
+            fields: [],
+            timestamp: new Date(),
+        };
+
+        let typeArr = ['Home', 'Overworld', 'Nether', 'End'];
+
+        typeArr.forEach(type => {
+            if (currentDoc[type.toLowerCase()].length != 0) {
+                let coordinates = "";
+                currentDoc[type.toLowerCase()].forEach(item => {
+                    coordinates = coordinates + `${item.name}: ${item.coordinates}\r\n`
+                });
+                fancyEmbed.fields.push({ name: type, value: coordinates })
+            }
+        });
+
+        interaction.reply({
+            embeds: [fancyEmbed],
+        });
+    }
 }

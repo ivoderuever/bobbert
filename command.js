@@ -3,8 +3,6 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     command: (client) => {
-
-        // console.log(client)
         console.log(`Logged in as ${client.user.tag}!`);
 
         const guildeId = config.GUILD_ID;
@@ -83,6 +81,10 @@ module.exports = {
             ]
         })
 
-        console.log(commands);
+        commands?.create({
+            name: 'list',
+            description: 'Show a list with coordinates',
+        })
+
     }
 }

@@ -1,4 +1,4 @@
-const { ping, status, mark, unmark } = require('./commandFunc');   // Command function handler
+const { ping, status, mark, unmark, list } = require('./commandFunc');   // Command function handler
 
 module.exports = {
     interAct: async (interaction) => {
@@ -22,6 +22,10 @@ module.exports = {
 
         if (commandName === "unmark") {
             unmark(interaction, options)
+        }
+
+        if (commandName === "list") {
+            list(interaction)
         }
     }
 }
