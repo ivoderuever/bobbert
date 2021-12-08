@@ -79,15 +79,14 @@ module.exports = {
 
         let chordObj = {
             name: name,
-            cordinates: fullCords,
+            coordinates: fullCords,
         }
 
         function store() {
             currentDoc[type].push(chordObj);
             documentStore(currentDoc);
-            console.log(currentDoc);
             interaction.reply({
-                content: `Cordinate for ${name} in ${type}: ${fullCords} are stored`,
+                content: `Coordinates for ${name} in ${type}: ${fullCords} are stored`,
             });
             return;
         }
@@ -107,6 +106,42 @@ module.exports = {
                 }
             } else {
                 store();
+            }
+        } catch (error) {
+            console.log(error);
+            interaction.reply({
+                content: `${type} does not exist! Try home, overworld, nether or end.`,
+                ephemeral: true
+            });
+        }
+    },
+    unmark: (interaction, options) => {
+        let currentDoc = documentGet();
+        const type = options.getString('type').toLowerCase();
+        const name = options.getString('name').toLowerCase().replace(" ", '');
+
+
+        function store() {
+            currentDoc[type].splice(itemToRemoveIndex, 1);
+            documentStore(currentDoc);
+            interaction.reply({
+                content: `${name} is removed from the ${type} list`,
+            });
+            return;
+        }
+
+        const itemToRemoveIndex = currentDoc[type].findIndex(function (item) {
+            return item.name === name;
+        });
+
+        try {
+            if (itemToRemoveIndex !== -1) {
+                store();
+            } else {
+                interaction.reply({
+                    content: `${name} does not exist!`,
+                    ephemeral: true
+                });
             }
         } catch (error) {
             console.log(error);

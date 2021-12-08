@@ -47,7 +47,7 @@ module.exports = {
 
         commands?.create({
             name: 'mark',
-            description: 'Add cordinate',
+            description: 'Add coordinate',
             options: [
                 {
                     name: 'type',
@@ -69,16 +69,35 @@ module.exports = {
                 },
                 {
                     name: 'y',
-                    description: 'y cordinate. enter * when not specified',
+                    description: 'y coordinate. enter * when not specified',
                     type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 },
                 {
                     name: 'z',
-                    description: 'z cordinate',
+                    description: 'z coordinate',
                     type: Constants.ApplicationCommandOptionTypes.NUMBER,
                     required: true
                 },
+            ]
+        })
+
+        commands?.create({
+            name: 'unmark',
+            description: 'Remove coordinate',
+            options: [
+                {
+                    name: 'type',
+                    description: 'home, overworld, nether, end',
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
+                },
+                {
+                    name: 'name',
+                    description: 'the name or description of the location',
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
+                }
             ]
         })
     }
