@@ -44,5 +44,42 @@ module.exports = {
                 }
             ]
         })
+
+        commands?.create({
+            name: 'mark',
+            description: 'Add cordinate',
+            options: [
+                {
+                    name: 'type',
+                    description: 'home, overworld, nether, end',
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
+                },
+                {
+                    name: 'name',
+                    description: 'the name or description of the location',
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
+                },
+                {
+                    name: 'x',
+                    description: 'x cordinate',
+                    type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                    required: true
+                },
+                {
+                    name: 'y',
+                    description: 'y cordinate. enter * when not specified',
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
+                },
+                {
+                    name: 'z',
+                    description: 'z cordinate',
+                    type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                    required: true
+                },
+            ]
+        })
     }
 }

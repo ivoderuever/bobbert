@@ -67,4 +67,53 @@ module.exports = {
             ephemeral: true
         });
     },
+    mark: (interaction, options) => {
+        let currentDoc = documentGet();
+        const type = options.getString('type').toLowerCase();
+        const name = options.getString('name').toLowerCase().replace(" ", '');
+        const x = options.getNumber('x');
+        const z = options.getNumber('z');
+        let y = options.getString('y')
+
+        let fullCords = `${x}/${y}/${z}`;
+
+        let chordObj = {
+            name: name,
+            cordinates: fullCords,
+        }
+
+        function store() {
+            currentDoc[type].push(chordObj);
+            documentStore(currentDoc);
+            console.log(currentDoc);
+            interaction.reply({
+                content: `Cordinate for ${name} in ${type}: ${fullCords} are stored`,
+            });
+            return;
+        }
+
+        try {
+            if (currentDoc[type].length != 0) {
+                function isUsed(n) {
+                    return n.name === name;
+                }
+                if (currentDoc[type].find(isUsed) == undefined) {
+                    store();
+                } else {
+                    interaction.reply({
+                        content: `${name} already exists!`,
+                        ephemeral: true
+                    });
+                }
+            } else {
+                store();
+            }
+        } catch (error) {
+            console.log(error);
+            interaction.reply({
+                content: `${type} does not exist! Try home, overworld, nether or end.`,
+                ephemeral: true
+            });
+        }
+    },
 }
