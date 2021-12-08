@@ -9,7 +9,7 @@ module.exports = {
         const { commandName, options, createdAt } = interaction;
 
         if (commandName === "ping") {
-            ping(interaction);
+            ping(interaction, createdAt);
         }
 
         if (commandName === "status") {
