@@ -3,6 +3,7 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     command: (client) => {
+
         // console.log(client)
         console.log(`Logged in as ${client.user.tag}!`);
 
@@ -24,25 +25,6 @@ module.exports = {
         commands?.create({
             name: 'status',
             description: 'Replies with the server status',
-        })
-
-        commands?.create({
-            name: 'add',
-            description: 'adds two numbers',
-            options: [
-                {
-                    name: 'num1',
-                    description: 'first number',
-                    type: Constants.ApplicationCommandOptionTypes.NUMBER,
-                    required: true
-                },
-                {
-                    name: 'num2',
-                    description: 'Second number',
-                    type: Constants.ApplicationCommandOptionTypes.NUMBER,
-                    required: true
-                }
-            ]
         })
 
         commands?.create({
@@ -100,5 +82,7 @@ module.exports = {
                 }
             ]
         })
+
+        console.log(commands);
     }
 }

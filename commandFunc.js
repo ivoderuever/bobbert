@@ -58,15 +58,6 @@ module.exports = {
                 console.log('Request completed!');
             });
     },
-    add: (interaction, options) => {
-        const num1 = options.getNumber('num1');
-        const num2 = options.getNumber('num2');
-        const result = num1 + num2;
-        interaction.reply({
-            content: `${num1} + ${num2} = ${result}`,
-            ephemeral: true
-        });
-    },
     mark: (interaction, options) => {
         let currentDoc = documentGet();
         const type = options.getString('type').toLowerCase();
