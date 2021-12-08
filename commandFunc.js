@@ -1,9 +1,12 @@
 const axios = require('axios');
 const config = require("./config.json");
+const { documentGet, documentStore } = require('./document');   // Document handler
+
 
 module.exports = {
-    ping: (interaction) => {
+    ping: (interaction, createdAt) => {
         const timeTaken = Date.now() - createdAt;
+
         interaction.reply({
             content: `Pong! This message had a latency of ${timeTaken}ms.`,
             ephemeral: true
