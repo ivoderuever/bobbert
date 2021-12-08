@@ -66,6 +66,10 @@ module.exports = {
         const z = options.getNumber('z');
         let y = options.getString('y')
 
+        if (y === '*') {
+            y = 'X';
+        }
+
         let fullCords = `${x}/${y}/${z}`;
 
         let chordObj = {
@@ -152,6 +156,10 @@ module.exports = {
             timestamp: new Date(),
         };
 
+        let markdownEscape = function (text) {
+            return text.replace(/((\_|\*|\~|\`|\|){2})/g, '\\$1');
+        };
+
         let typeArr = ['Home', 'Overworld', 'Nether', 'End'];
 
         typeArr.forEach(type => {
@@ -160,7 +168,7 @@ module.exports = {
                 currentDoc[type.toLowerCase()].forEach(item => {
                     coordinates = coordinates + `${item.name}: ${item.coordinates}\r\n`
                 });
-                fancyEmbed.fields.push({ name: type, value: coordinates })
+                fancyEmbed.fields.push({ name: type, value: markdownEscape(coordinates) })
             }
         });
 
