@@ -64,41 +64,63 @@ module.exports = {
         const name = options.getString('name').toLowerCase().replace(" ", '');
         const x = options.getNumber('x');
         const z = options.getNumber('z');
-        let y = options.getString('y')
-
-        if (y === '*') {
-            y = 'X';
-        }
+        const y = options.getString('y');
 
         let fullCords = `${x}/${y}/${z}`;
 
-        let chordObj = {
-            name: name,
-            coordinates: fullCords,
-        }
-
-        function store() {
-            currentDoc[type].push(chordObj);
-            documentStore(currentDoc);
-            interaction.reply({
-                content: `Coordinates for ${name} in ${type}: ${fullCords} are stored`,
-            });
+        function store(newName) {
+            let chordObj = {
+                coordinates: fullCords,
+            }
+            if (newName !== undefined) {
+                chordObj.name = newName;
+                currentDoc[type].push(chordObj);
+                documentStore(currentDoc);
+                interaction.reply({
+                    content: `Coordinates for ${newName} in ${type}: ${fullCords} are stored`,
+                });
+            } else {
+                chordObj.name = name;
+                currentDoc[type].push(chordObj);
+                documentStore(currentDoc);
+                interaction.reply({
+                    content: `Coordinates for ${name} in ${type}: ${fullCords} are stored`,
+                });
+            }
             return;
         }
 
         try {
-            if (currentDoc[type].length != 0) {
-                function isUsed(n) {
-                    return n.name === name;
+            function isUsed(n) {
+                return n.name === name;
+            }
+            if (currentDoc[type].find(isUsed) != undefined) {
+                let newTempName;
+                function nameExists(na) {
+                    let newName;
+                    // Check if the name already exists
+                    function isUsed2(n) {
+                        return n.name === na;
+                    }
+                    if (currentDoc[type].find(isUsed2) != undefined) {
+                        let nameArray = na.split('(');
+                        let nameArray2;
+
+                        //if there is a ( in the name
+                        if (nameArray.length > 1) {
+                            nameArray2 = nameArray[1].split(')');
+                            newName = nameArray[0] + '(' + (parseInt(nameArray2[0]) + 1) + ')';
+                            nameExists(newName);
+                        } else {
+                            newName = na + '(1)';
+                            nameExists(newName);
+                        }
+                    } else {
+                        newTempName = na;
+                    }
                 }
-                if (currentDoc[type].find(isUsed) == undefined) {
-                    store();
-                } else {
-                    interaction.reply({
-                        content: `${name} already exists!`,
-                        ephemeral: true
-                    });
-                }
+                nameExists(name);
+                store(newTempName);
             } else {
                 store();
             }
@@ -156,10 +178,6 @@ module.exports = {
             timestamp: new Date(),
         };
 
-        let markdownEscape = function (text) {
-            return text.replace(/((\_|\*|\~|\`|\|){2})/g, '\\$1');
-        };
-
         let typeArr = ['Home', 'Overworld', 'Nether', 'End'];
 
         typeArr.forEach(type => {
@@ -168,7 +186,8 @@ module.exports = {
                 currentDoc[type.toLowerCase()].forEach(item => {
                     coordinates = coordinates + `${item.name}: ${item.coordinates}\r\n`
                 });
-                fancyEmbed.fields.push({ name: type, value: markdownEscape(coordinates) })
+                
+                fancyEmbed.fields.push({ name: type, value: coordinates.replaceAll('*', '\\*') })
             }
         });
 
