@@ -1,5 +1,5 @@
 const { Client, Intents } = require('discord.js');
-const { interAct } = require('./interaction');   // interaction handler
+const { interAct } = require('./interaction');   // Interaction handler
 const { command } = require('./command');   // Command handler
 const config = require("./config.json");
 
