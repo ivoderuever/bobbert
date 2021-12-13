@@ -181,6 +181,7 @@ module.exports = {
         let typeArr = ['Home', 'Overworld', 'Nether', 'End'];
 
         typeArr.forEach(type => {
+            currentDoc[type.toLowerCase()].sort((a, b) => a.name.localeCompare(b.name))
             if (currentDoc[type.toLowerCase()].length != 0) {
                 let coordinates = "";
                 currentDoc[type.toLowerCase()].forEach(item => {
