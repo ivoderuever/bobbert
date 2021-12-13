@@ -178,10 +178,6 @@ module.exports = {
             timestamp: new Date(),
         };
 
-        let markdownEscape = function (text) {
-            return text.replace(/((\_|\*|\~|\`|\|){2})/g, '\\$1');
-        };
-
         let typeArr = ['Home', 'Overworld', 'Nether', 'End'];
 
         typeArr.forEach(type => {
@@ -190,7 +186,8 @@ module.exports = {
                 currentDoc[type.toLowerCase()].forEach(item => {
                     coordinates = coordinates + `${item.name}: ${item.coordinates}\r\n`
                 });
-                fancyEmbed.fields.push({ name: type, value: markdownEscape(coordinates) })
+                
+                fancyEmbed.fields.push({ name: type, value: coordinates.replaceAll('*', '\\*') })
             }
         });
 
