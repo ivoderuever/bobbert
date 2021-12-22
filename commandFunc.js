@@ -135,7 +135,7 @@ module.exports = {
     unmark: (interaction, options) => {
         let currentDoc = documentGet();
         const type = options.getString('type').toLowerCase();
-        const name = options.getString('name').toLowerCase().replace(" ", '');
+        const name = options.getString('name').toLowerCase().replace(" ", '-');
 
 
         function store() {
