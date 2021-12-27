@@ -68,6 +68,55 @@ module.exports = {
 
         let fullCords = `${x}/${y}/${z}`;
 
+        if (Number.isInteger(y) || y === '*') {
+            try {
+                function isUsed(n) {
+                    return n.name === name;
+                }
+                if (currentDoc[type].find(isUsed) != undefined) {
+                    let newTempName;
+                    function nameExists(na) {
+                        let newName;
+                        // Check if the name already exists
+                        function isUsed2(n) {
+                            return n.name === na;
+                        }
+                        if (currentDoc[type].find(isUsed2) != undefined) {
+                            let nameArray = na.split('(');
+                            let nameArray2;
+    
+                            //if there is a ( in the name
+                            if (nameArray.length > 1) {
+                                nameArray2 = nameArray[1].split(')');
+                                newName = nameArray[0] + '(' + (parseInt(nameArray2[0]) + 1) + ')';
+                                nameExists(newName);
+                            } else {
+                                newName = na + '(1)';
+                                nameExists(newName);
+                            }
+                        } else {
+                            newTempName = na;
+                        }
+                    }
+                    nameExists(name);
+                    store(newTempName);
+                } else {
+                    store();
+                }
+            } catch (error) {
+                console.log(error);
+                interaction.reply({
+                    content: `${type} does not exist! Try home, overworld, nether or end.`,
+                    ephemeral: true
+                });
+            }
+        } else {
+            interaction.reply({
+                content: `${y} is not a valid y coordinate. Use * or a number!`,
+                ephemeral: true
+            });
+        }
+
         function store(newName) {
             let chordObj = {
                 coordinates: fullCords,
@@ -88,48 +137,6 @@ module.exports = {
                 });
             }
             return;
-        }
-
-        try {
-            function isUsed(n) {
-                return n.name === name;
-            }
-            if (currentDoc[type].find(isUsed) != undefined) {
-                let newTempName;
-                function nameExists(na) {
-                    let newName;
-                    // Check if the name already exists
-                    function isUsed2(n) {
-                        return n.name === na;
-                    }
-                    if (currentDoc[type].find(isUsed2) != undefined) {
-                        let nameArray = na.split('(');
-                        let nameArray2;
-
-                        //if there is a ( in the name
-                        if (nameArray.length > 1) {
-                            nameArray2 = nameArray[1].split(')');
-                            newName = nameArray[0] + '(' + (parseInt(nameArray2[0]) + 1) + ')';
-                            nameExists(newName);
-                        } else {
-                            newName = na + '(1)';
-                            nameExists(newName);
-                        }
-                    } else {
-                        newTempName = na;
-                    }
-                }
-                nameExists(name);
-                store(newTempName);
-            } else {
-                store();
-            }
-        } catch (error) {
-            console.log(error);
-            interaction.reply({
-                content: `${type} does not exist! Try home, overworld, nether or end.`,
-                ephemeral: true
-            });
         }
     },
     unmark: (interaction, options) => {
